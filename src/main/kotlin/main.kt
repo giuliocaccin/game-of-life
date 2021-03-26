@@ -1,3 +1,5 @@
+import Cell.Dead
+import Cell.Alive
 import java.util.*
 import kotlin.math.pow
 import kotlin.random.Random
@@ -43,9 +45,12 @@ fun convertToBoard(world: World): Array<IntArray> =
     (world.matrix.indices)
         .map { x ->
             (world.matrix.indices).map { y: Int ->
-                if (world.matrix[x][y].status == "life") 1 else 0
+                when (world.matrix[x][y]) {
+                    is Dead -> 0
+                    is Alive -> 1
+                }
             }.toIntArray()
         }.toTypedArray()
 
 fun convertToWorld(board: Array<IntArray>): World =
-    World(board.map { x -> x.map { y -> Cell(if (y == 1) "life" else "death") } })
+    World(board.map { x -> x.map { y -> if (y == 1) Alive else Dead } })
