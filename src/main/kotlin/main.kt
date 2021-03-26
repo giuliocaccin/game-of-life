@@ -5,10 +5,10 @@ import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
 fun main(args: Array<String>) {
-    val max = 10
-    val seed = generateSeed()
-    var board: Array<IntArray> = IntArray(max)
-        .map { IntArray(max) { seed.pop() } }
+    val edgeSize = 15
+    val seed = generateSeed(edgeSize.toDouble().pow(2.0).toInt())
+    var board: Array<IntArray> = IntArray(edgeSize)
+        .map { IntArray(edgeSize) { seed.pop() } }
         .toTypedArray()
 
     var tick = 1
@@ -21,10 +21,10 @@ fun main(args: Array<String>) {
     }
 }
 
-private fun generateSeed(): Stack<Int> {
+private fun generateSeed(length: Int): Stack<Int> {
     val rand = Random
     val seed = Stack<Int>()
-    seed.addAll(IntArray(10.0.pow(2.0).toInt()) { rand.nextInt(0, 2) }.toTypedArray())
+    seed.addAll(IntArray(length) { rand.nextInt(0, 2) }.toTypedArray())
     return seed
 }
 
@@ -39,20 +39,10 @@ fun tick(board: Array<IntArray>): Array<IntArray> {
     return convertToBoard(world.life())
 }
 
-class Cell(val status: String) {
-
-}
-
-class World(var matrix: List<List<Cell>>) {
-    fun life(): World {
-        return this
-    }
-}
-
 fun convertToBoard(world: World): Array<IntArray> =
-    (0..world.matrix.size-1)
+    (world.matrix.indices)
         .map { x ->
-            (0..world.matrix.size-1) .map { y: Int ->
+            (world.matrix.indices).map { y: Int ->
                 if (world.matrix[x][y].status == "life") 1 else 0
             }.toIntArray()
         }.toTypedArray()
