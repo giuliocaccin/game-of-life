@@ -32,7 +32,7 @@ private fun generateSeed(length: Int): Stack<Int> {
 
 private fun renderBoard(tick: Int, board: Array<IntArray>) {
     println("Tick nr: $tick")
-    board.map { line -> println(line.joinToString(".")) }
+    board.map { line -> println(line.joinToString(" ")) }
     println()
 }
 
