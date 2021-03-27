@@ -8,12 +8,27 @@ sealed class Cell {
 
 class World private constructor(private val matrix: List<List<Block>>) {
     fun life(): World {
-        (matrix.indices).map { x ->
-            (matrix[x].indices).map { y ->
-// TODO: implement rules
+        return World(matrix.map { row ->
+            row.map { block ->
+                val current = block.cell
+                val aliveNeighbours = block.neighborArea
+                    .map { position -> matrix[position.x][position.y] }
+                    .map { neighbour -> neighbour.cell }
+                    .count { cell -> cell === Alive }
+                if (current === Alive && aliveNeighbours < 2)
+                    block.copy(cell = Dead)
+                else if (current === Alive && (aliveNeighbours == 2 || aliveNeighbours == 3))
+                    block.copy(cell = Alive)
+                else if (current === Alive && aliveNeighbours > 3)
+                    block.copy(cell = Dead)
+                else if (current === Dead && aliveNeighbours == 3)
+                    block.copy(cell = Alive)
+                else if(current === Dead)
+                    block.copy(cell = Dead)
+                else
+                    throw IllegalStateException()
             }
-        }
-        return this
+        })
     }
 
     fun toBoard(): Array<IntArray> =
@@ -31,7 +46,7 @@ class World private constructor(private val matrix: List<List<Block>>) {
         fun fromBoard(board: Array<IntArray>): World =
             World(board.mapIndexed { x, row ->
                 row
-                    .map { y -> (if (y == 1) Alive else Dead) to Position(x, y) }
+                    .mapIndexed { y, value -> (if (value == 1) Alive else Dead) to Position(x, y) }
                     .map { pair -> Block(pair.first, getNeighbourArea(pair.second, board)) }
             })
     }

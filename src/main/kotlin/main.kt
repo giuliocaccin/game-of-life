@@ -5,7 +5,7 @@ import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
 fun main(args: Array<String>) {
-    val edgeSize = 15
+    val edgeSize = 100
     val seed = generateSeed(edgeSize.toDouble().pow(2.0).toInt())
     var board: Array<IntArray> = IntArray(edgeSize)
         .map { IntArray(edgeSize) { seed.pop() } }
@@ -37,6 +37,6 @@ private fun generateSeed(length: Int): Stack<Int> {
 }
 
 private fun renderBoard(board: Array<IntArray>) {
-    board.map { line -> println(line.joinToString(" ")) }
+    board.map { line -> println(line.joinToString("") { i -> if (i == 1) "█" else " " }) }
 }
 
