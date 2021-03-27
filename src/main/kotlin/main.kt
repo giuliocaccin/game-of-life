@@ -1,5 +1,3 @@
-import Cell.Dead
-import Cell.Alive
 import java.util.*
 import kotlin.math.pow
 import kotlin.random.Random
@@ -13,11 +11,19 @@ fun main(args: Array<String>) {
         .map { IntArray(edgeSize) { seed.pop() } }
         .toTypedArray()
 
+    println("Start")
+    renderBoard(board)
+    println()
+
     var tick = 1
     while (true) {
-        board = tick(board)
+        board = World.fromBoard(board)
+            .life()
+            .toBoard()
 
-        renderBoard(tick++, board)
+        println("Tick nr: ${tick++}")
+        renderBoard(board)
+        println()
 
         Thread.sleep(500)
     }
@@ -30,27 +36,7 @@ private fun generateSeed(length: Int): Stack<Int> {
     return seed
 }
 
-private fun renderBoard(tick: Int, board: Array<IntArray>) {
-    println("Tick nr: $tick")
+private fun renderBoard(board: Array<IntArray>) {
     board.map { line -> println(line.joinToString(" ")) }
-    println()
 }
 
-fun tick(board: Array<IntArray>): Array<IntArray> {
-    val world = convertToWorld(board)
-    return convertToBoard(world.life())
-}
-
-fun convertToBoard(world: World): Array<IntArray> =
-    (world.matrix.indices)
-        .map { x ->
-            (world.matrix.indices).map { y: Int ->
-                when (world.matrix[x][y]) {
-                    is Dead -> 0
-                    is Alive -> 1
-                }
-            }.toIntArray()
-        }.toTypedArray()
-
-fun convertToWorld(board: Array<IntArray>): World =
-    World(board.map { x -> x.map { y -> if (y == 1) Alive else Dead } })
