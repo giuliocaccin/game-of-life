@@ -48,4 +48,16 @@ internal class WorldTest {
                 Position(0, 0),
             )))
     }
+
+    @Test
+    fun worldSupportBlinkerOscillator() {
+        val matrix = arrayOf(
+            intArrayOf(0, 0, 0, 0, 0),
+            intArrayOf(0, 0, 1, 0, 0),
+            intArrayOf(0, 0, 1, 0, 0),
+            intArrayOf(0, 0, 1, 0, 0),
+            intArrayOf(0, 0, 0, 0, 0)
+        )
+        assertTrue(World.fromBoard(matrix).life().life().toBoard().contentDeepEquals(matrix))
+    }
 }

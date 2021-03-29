@@ -49,7 +49,7 @@ class World private constructor(private val matrix: List<List<Block>>) {
         fun fromBoard(board: Array<IntArray>): World =
             World(board.mapIndexed { x, row ->
                 row.mapIndexed { y, value -> (if (value == 1) Alive else Dead) to Position(x, y) }
-                    .map { pair -> Block(pair.first, getNeighbourArea(pair.second, board)) }
+                    .map { (cell, position) -> Block(cell, getNeighbourArea(position, board)) }
             })
     }
 }
